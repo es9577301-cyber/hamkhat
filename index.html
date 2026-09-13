@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>هم‌خط</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500..600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B1E2B;
+    --bg-soft: #232739;
+    --card: #262A3C;
+    --text: #EDEAE3;
+    --text-dim: #9A9DB0;
+    --accent: #E8A33D;
+    --accent-dim: #a5793a;
+    --danger: #C25450;
+    --live: #6FA287;
+    --ring: rgba(232,163,61,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Vazirmatn', sans-serif;
+    overflow:hidden;
+  }
+  #app{ position:relative; width:100%; height:100vh; height:100dvh; }
+
+  /* ---------- Landing ---------- */
+  .screen{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    transition: opacity 0.35s ease;
+  }
+  .hidden{ display:none; }
+
+  .join-card{
+    width: min(92%, 380px);
+    background: var(--card);
+    border-radius: 22px;
+    padding: 32px 26px 28px;
+    display:flex; flex-direction:column; gap:18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .waves{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    height: 56px;
+  }
+  .wave-bar{
+    width:5px; border-radius:4px; background: var(--accent);
+    animation: sway 1.8s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1){ height:18px; animation-delay: 0s; }
+  .wave-bar:nth-child(2){ height:38px; animation-delay: 0.15s; }
+  .wave-bar:nth-child(3){ height:52px; animation-delay: 0.3s; }
+  .wave-bar:nth-child(4){ height:32px; animation-delay: 0.45s; }
+  .wave-bar:nth-child(5){ height:20px; animation-delay: 0.6s; }
+  @keyframes sway{
+    0%,100%{ transform: scaleY(0.5); opacity:0.6; }
+    50%{ transform: scaleY(1); opacity:1; }
+  }
+
+  .brand{
+    font-family:'Fraunces', serif;
+    font-size: 28px;
+    font-weight:600;
+    text-align:center;
+    letter-spacing: 0.2px;
+  }
+  .tagline{
+    text-align:center;
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin-top:-10px;
+    line-height:1.6;
+  }
+
+  label{
+    font-size:12.5px;
+    color: var(--text-dim);
+    margin-bottom:6px;
+    display:block;
+  }
+  .field{ display:flex; flex-direction:column; }
+  input[type=text]{
+    background: var(--bg-soft);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Vazirmatn', sans-serif;
+    outline:none;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  input[type=text]:focus{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+
+  .code-row{ display:flex; gap:8px; }
+  .code-row input{ flex:1; letter-spacing:2px; font-weight:600; text-align:center; }
+  .icon-btn{
+    background: var(--bg-soft);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    width: 46px;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--text-dim);
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .icon-btn:active{ transform: scale(0.94); }
+
+  .primary-btn{
+    background: var(--accent);
+    color: #1B1500;
+    border:none;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15.5px;
+    font-weight:600;
+    font-family:'Vazirmatn', sans-serif;
+    cursor:pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .primary-btn:active{ transform: scale(0.98); }
+  .primary-btn:disabled{ filter: grayscale(0.4) opacity(0.6); cursor:default; }
+
+  .hint{ font-size:12px; color: var(--text-dim); text-align:center; line-height:1.7; }
+  .status-line{
+    font-size:13px; text-align:center; color: var(--accent); min-height:18px;
+  }
+
+  /* ---------- Call screen ---------- */
+  #callScreen{
+    background:#000;
+    flex-direction:column;
+  }
+  .video-stage{
+    position:relative;
+    width:100%; height:100%;
+    background:#0d0e14;
+  }
+  video{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+  }
+  #remoteVideo{ background:#111320; }
+  #localVideo{
+    position:absolute;
+    width: 108px; height: 152px;
+    top: 18px; left: 16px;
+    border-radius: 14px;
+    object-fit:cover;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    transform: scaleX(-1);
+    z-index: 3;
+  }
+  .top-bar{
+    position:absolute; top:0; right:0; left:0;
+    padding: 18px 20px;
+    display:flex; justify-content:center;
+    z-index:2;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+  }
+  .peer-pill{
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .dot{ width:7px; height:7px; border-radius:50%; background: var(--live); }
+  .dot.connecting{ background: var(--accent); animation: blink 1s infinite; }
+  @keyframes blink{ 50%{ opacity:0.3; } }
+
+  .no-video-placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px;
+    color: var(--text-dim);
+    background: radial-gradient(circle at 50% 40%, #232739, #14151f);
+  }
+  .avatar-circle{
+    width:84px; height:84px; border-radius:50%;
+    background: var(--bg-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif;
+    font-size: 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .controls{
+    position:absolute; bottom:28px; left:0; right:0;
+    display:flex; justify-content:center; gap:16px;
+    z-index:3;
+  }
+  .ctrl-btn{
+    width:56px; height:56px; border-radius:50%;
+    border:none;
+    background: rgba(255,255,255,0.12);
+    color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    backdrop-filter: blur(6px);
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .ctrl-btn:active{ transform: scale(0.92); }
+  .ctrl-btn.off{ background: rgba(255,255,255,0.9); color:#1B1E2B; }
+  .ctrl-btn.end{ background: var(--danger); }
+
+  svg{ width:22px; height:22px; }
+
+  .copy-toast{
+    position:fixed; bottom:26px; left:50%; transform: translateX(-50%);
+    background: var(--card);
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 0.25s ease;
+    z-index: 50;
+  }
+  .copy-toast.show{ opacity:1; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- LANDING -->
+  <div id="landingScreen" class="screen">
+    <div class="join-card">
+      <div class="waves">
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div>
+      </div>
+      <div class="brand">هم‌خط</div>
+      <div class="tagline">یه کد بساز و برای طرف مقابل بفرست، یا کد اونو اینجا وارد کن تا تماس وصل بشه.</div>
+
+      <div class="field">
+        <label for="nameInput">اسمت</label>
+        <input type="text" id="nameInput" placeholder="مثلاً سارا" maxlength="20">
+      </div>
+
+      <div class="field">
+        <label for="codeInput">کد تماس</label>
+        <div class="code-row">
+          <input type="text" id="codeInput" placeholder="مثلاً 4X9K2" maxlength="8">
+          <div class="icon-btn" id="copyCodeBtn" title="کپی کد">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </div>
+          <div class="icon-btn" id="newCodeBtn" title="کد جدید">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="startBtn">شروع تماس</button>
+      <div class="status-line" id="statusLine"></div>
+      <div class="hint">دوربین و میکروفون فقط با اجازه‌ی خودت فعال می‌شه. این یه تماس مستقیم بین دو مرورگره؛ اگه یکی‌تون پشت شبکه‌ی خیلی محدودی باشه (مثل بعضی شبکه‌های سازمانی)، ممکنه وصل نشه.</div>
+    </div>
+  </div>
+
+  <!-- CALL SCREEN -->
+  <div id="callScreen" class="screen hidden">
+    <div class="video-stage">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <div class="no-video-placeholder" id="remotePlaceholder">
+        <div class="avatar-circle" id="remoteInitial">؟</div>
+        <div id="remoteStatusText">در حال اتصال…</div>
+      </div>
+      <video id="localVideo" autoplay playsinline muted></video>
+
+      <div class="top-bar">
+        <div class="peer-pill">
+          <div class="dot connecting" id="connDot"></div>
+          <span id="peerLabel">در حال اتصال…</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" id="micBtn" title="میکروفون">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </button>
+        <button class="ctrl-btn" id="camBtn" title="دوربین">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </button>
+        <button class="ctrl-btn end" id="endBtn" title="پایان تماس">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.4 12.4 0 0 0 3.81.61 2 2 0 0 1 2 2v3.5a2 2 0 0 1-2 2A18 18 0 0 1 2 5a2 2 0 0 1 2-2h3.5a2 2 0 0 1 2 2 12.4 12.4 0 0 0 .61 3.81 2 2 0 0 1-.45 2.11L8.4 12.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="copy-toast" id="copyToast">کد کپی شد</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const landingScreen = $('landingScreen');
+  const callScreen = $('callScreen');
+  const nameInput = $('nameInput');
+  const codeInput = $('codeInput');
+  const startBtn = $('startBtn');
+  const statusLine = $('statusLine');
+  const copyToast = $('copyToast');
+  const remoteVideo = $('remoteVideo');
+  const localVideo = $('localVideo');
+  const remotePlaceholder = $('remotePlaceholder');
+  const remoteInitial = $('remoteInitial');
+  const remoteStatusText = $('remoteStatusText');
+  const peerLabel = $('peerLabel');
+  const connDot = $('connDot');
+  const micBtn = $('micBtn');
+  const camBtn = $('camBtn');
+  const endBtn = $('endBtn');
+
+  function randomCode(){
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = '';
+    for(let i=0;i<5;i++) s += chars[Math.floor(Math.random()*chars.length)];
+    return s;
+  }
+  codeInput.value = randomCode();
+
+  $('newCodeBtn').onclick = () => { codeInput.value = randomCode(); };
+  $('copyCodeBtn').onclick = () => {
+    const code = codeInput.value.trim();
+    if(!code) return;
+    navigator.clipboard.writeText(code).then(()=>{
+      copyToast.classList.add('show');
+      setTimeout(()=>copyToast.classList.remove('show'), 1400);
+    }).catch(()=>{});
+  };
+
+  let pc = null;
+  let localStream = null;
+  let role = null; // 'caller' or 'callee'
+  let roomKey = null;
+  let pollTimer = null;
+  let seenIce = new Set();
+  let ended = false;
+  let micOn = true, camOn = true;
+
+  const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+  async function storageSet(key, value){
+    try { return await window.storage.set(key, value, true); }
+    catch(e){ console.error('set failed', key, e); return null; }
+  }
+  async function storageGet(key){
+    try { const r = await window.storage.get(key, true); return r ? r.value : null; }
+    catch(e){ return null; }
+  }
+  async function storageList(prefix){
+    try { const r = await window.storage.list(prefix, true); return r ? r.keys : []; }
+    catch(e){ return []; }
+  }
+  async function storageDeletePrefix(prefix){
+    const keys = await storageList(prefix);
+    for(const k of keys){
+      try { await window.storage.delete(k, true); } catch(e){}
+    }
+  }
+
+  function setStatus(msg){ statusLine.textContent = msg; }
+
+  startBtn.onclick = async () => {
+    const code = codeInput.value.trim().toUpperCase();
+    if(!code){ setStatus('یه کد وارد کن یا بساز.'); return; }
+    startBtn.disabled = true;
+    setStatus('در حال گرفتن اجازه‌ی دوربین و میکروفون…');
+
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    } catch(e){
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+        setStatus('دوربین در دسترس نبود؛ فقط با صدا ادامه می‌دیم.');
+      } catch(e2){
+        setStatus('دسترسی به میکروفون رد شد. برای تماس باید اجازه بدی.');
+        startBtn.disabled = false;
+        return;
+      }
+    }
+
+    localVideo.srcObject = localStream;
+    roomKey = 'call:' + code;
+    const displayName = (nameInput.value || '').trim();
+    remoteInitial.textContent = '؟';
+
+    landingScreen.classList.add('hidden');
+    callScreen.classList.remove('hidden');
+    peerLabel.textContent = 'کد ' + code + ' — در حال اتصال…';
+
+    await beginSignaling(displayName);
+  };
+
+  async function beginSignaling(displayName){
+    pc = new RTCPeerConnection(rtcConfig);
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+    pc.ontrack = (event) => {
+      remoteVideo.srcObject = event.streams[0];
+      remotePlaceholder.style.display = 'none';
+    };
+
+    pc.oniceconnectionstatechange = () => {
+      if(pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed'){
+        connDot.classList.remove('connecting');
+        remoteStatusText.textContent = 'وصل شد';
+        peerLabel.textContent = 'در تماس';
+      } else if(pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed'){
+        peerLabel.textContent = 'اتصال قطع شد';
+      }
+    };
+
+    const existingOffer = await storageGet(roomKey + ':offer');
+
+    if(!existingOffer){
+      role = 'caller';
+      setupIceHandler();
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      await storageSet(roomKey + ':offer', JSON.stringify({ sdp: offer, name: displayName }));
+      setStatus('منتظر طرف مقابل… کد رو براش بفرست.');
+      pollForAnswer();
+    } else {
+      role = 'callee';
+      setupIceHandler();
+      const parsed = JSON.parse(existingOffer);
+      if(parsed.name) remoteInitial.textContent = parsed.name[0].toUpperCase();
+      await pc.setRemoteDescription(new RTCSessionDescription(parsed.sdp));
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      await storageSet(roomKey + ':answer', JSON.stringify({ sdp: answer, name: displayName }));
+      setStatus('در حال اتصال…');
+    }
+
+    pollForIce();
+    pollForEnd();
+  }
+
+  function setupIceHandler(){
+    let counter = 0;
+    pc.onicecandidate = async (event) => {
+      if(event.candidate){
+        await storageSet(roomKey + ':ice:' + role + ':' + (counter++), JSON.stringify(event.candidate));
+      }
+    };
+  }
+
+  async function pollForAnswer(){
+    const iv = setInterval(async () => {
+      if(ended){ clearInterval(iv); return; }
+      const answer = await storageGet(roomKey + ':answer');
+      if(answer){
+        clearInterval(iv);
+        const parsed = JSON.parse(answer);
+        if(parsed.name) remoteInitial.textContent = parsed.name[0].toUpperCase();
+        try {
+          await pc.setRemoteDescription(new RTCSessionDescription(parsed.sdp));
+        } catch(e){ console.error(e); }
+      }
+    }, 1500);
+  }
+
+  function pollForIce(){
+    const otherRole = role === 'caller' ? 'callee' : 'caller';
+    pollTimer = setInterval(async () => {
+      if(ended){ clearInterval(pollTimer); return; }
+      const keys = await storageList(roomKey + ':ice:' + otherRole + ':');
+      for(const k of keys){
+        if(seenIce.has(k)) continue;
+        seenIce.add(k);
+        const val = await storageGet(k);
+        if(val){
+          try { await pc.addIceCandidate(new RTCIceCandidate(JSON.parse(val))); }
+          catch(e){ console.error('addIceCandidate failed', e); }
+        }
+      }
+    }, 1500);
+  }
+
+  function pollForEnd(){
+    const iv = setInterval(async () => {
+      if(ended){ clearInterval(iv); return; }
+      const status = await storageGet(roomKey + ':status');
+      if(status === 'ended'){
+        clearInterval(iv);
+        finishCall(false);
+      }
+    }, 1500);
+  }
+
+  micBtn.onclick = () => {
+    if(!localStream) return;
+    micOn = !micOn;
+    localStream.getAudioTracks().forEach(t => t.enabled = micOn);
+    micBtn.classList.toggle('off', !micOn);
+  };
+
+  camBtn.onclick = () => {
+    if(!localStream) return;
+    camOn = !camOn;
+    localStream.getVideoTracks().forEach(t => t.enabled = camOn);
+    camBtn.classList.toggle('off', !camOn);
+  };
+
+  endBtn.onclick = async () => {
+    if(roomKey) await storageSet(roomKey + ':status', 'ended');
+    finishCall(true);
+  };
+
+  async function finishCall(cleanup){
+    ended = true;
+    if(pollTimer) clearInterval(pollTimer);
+    if(pc){ pc.close(); pc = null; }
+    if(localStream){ localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    remoteVideo.srcObject = null;
+    localVideo.srcObject = null;
+    if(cleanup && roomKey){
+      setTimeout(() => { storageDeletePrefix(roomKey); }, 3000);
+    }
+    callScreen.classList.add('hidden');
+    landingScreen.classList.remove('hidden');
+    startBtn.disabled = false;
+    setStatus('تماس تموم شد.');
+    codeInput.value = randomCode();
+    remotePlaceholder.style.display = 'flex';
+    remoteStatusText.textContent = 'در حال اتصال…';
+    connDot.classList.add('connecting');
+    micOn = true; camOn = true;
+    micBtn.classList.remove('off'); camBtn.classList.remove('off');
+    seenIce = new Set();
+    role = null; roomKey = null;
+  }
+})();
+</script>
+</body>
+</html>
